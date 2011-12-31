@@ -5,13 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="resources/jquery/mobile/1.0/jquery.mobile-1.0.min.css" />
     <script type="text/javascript" src="resources/jquery/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="globalconfig.js"></script>
     <script type="text/javascript" src="resources/jquery/mobile/1.0/jquery.mobile-1.0.min.js"></script>
     <script type="text/javascript" src="index.js"></script>>
   </head>
   <body>
-    <div data-role="page" data-theme="c" id="main-page">
-      <div data-role="header">
-	<h1>GitHub for BlackBerry</h1>
+    <div data-role="page" data-theme="c" id="events-page">
+      <div data-id="headernav" data-role="header">
+        <h1>GitHub for BlackBerry</h1>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#events-page" data-icon="info" data-theme="b">Activity Stream</a></li>
+            <li><a href="#repos-page" data-icon="grid">Repositories</a></li>
+            <li><a href="#options" data-icon="gear">Options</a></li>
+          </ul>
+        </div>
+      </div>
+      <div data-role="content">
+        <div id="events-list">
+          <ul data-role="listview" data-inset="true" data-filter="true">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div data-role="page" data-theme="c" id="repos-page">
+      <div data-id="headernav" data-role="header">
+        <h1>GitHub for BlackBerry</h1>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#events-page" data-icon="info">Activity Stream</a></li>
+            <li><a href="#repos-page" data-icon="grid" data-theme="b">Repositories</a></li>
+            <li><a href="#options" data-icon="gear">Options</a></li>
+          </ul>
+        </div>
       </div>
       <div data-role="content">
         <div id="repo-list">

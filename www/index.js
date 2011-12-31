@@ -1,13 +1,5 @@
-var loaded = false;
-
-$('#main-page').live('pageshow', show_progress_loader);
-$('#main-page').live('pageinit', load_repos);
-
-function show_progress_loader() {
-    if (!loaded) {
-        $.mobile.showPageLoadingMsg();
-    }
-}
+$('#events-page').live('pageinit', load_events);
+$('#repos-page').live('pageinit', load_repos);
 
 function load_repos() {
     $.getJSON('https://api.github.com/users/ealden/repos?callback=?', function(data) {
@@ -18,8 +10,20 @@ function load_repos() {
         });
 
         $('#repo-list ul').listview('refresh');
+    });
+}
 
-        $.mobile.hidePageLoadingMsg();
-        loaded = true;
+function load_events() {
+    $.getJSON('https://api.github.com/users/ealden/received_events?callback=?', function(data) {
+        $.each(data.data, function(index, event) {
+            if (event.type == 'PushEvent') {
+                $('#events-list ul').append(
+                    $('<li>').append(event.actor.login));
+            } else {
+                console.log(event.type);
+            }
+        });
+
+        $('#events-list ul').listview('refresh');
     });
 }
