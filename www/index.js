@@ -69,6 +69,8 @@ function open_pull_request_event(event) {
                 .append(' on ')
                 .append(event.repo.name));
 
+    pull_request_event_summary(event, item);
+
     $('#events-list ul').append(item);
 }
 
@@ -82,5 +84,28 @@ function merge_pull_request_event(event) {
                 .append(' on ')
                 .append(event.repo.name));
 
+    pull_request_event_summary(event, item);
+
     $('#events-list ul').append(item);
+}
+
+function pull_request_event_summary(event, item) {
+   item.append($('<p>').append(event.payload.pull_request.title));
+
+    var commit_count = event.payload.pull_request.commits;
+    var addition_count = event.payload.pull_request.additions;
+    var deletion_count = event.payload.pull_request.deletions;
+
+    item.append($('<p>')
+                .append(commit_count)
+                .append(' ')
+                .append((commit_count > 1) ? 'commits' : 'commit')
+                .append(' with ')
+                .append(addition_count)
+                .append(' ')
+                .append((addition_count > 1) ? 'additions' : 'addition')
+                .append(' and ')
+                .append(deletion_count)
+                .append(' ')
+                .append((deletion_count > 1) ? 'deletions' : 'deletion'));
 }
