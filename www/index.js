@@ -31,6 +31,8 @@ function load_events() {
                 issues_event(event);
             } else if (event.type == 'IssueCommentEvent') {
                 issue_comment_event(event);
+            } else if (event.type == 'CommitCommentEvent') {
+                commit_comment_event(event);
             } else {
                 console.log(event.type);
             }
@@ -168,6 +170,23 @@ function issue_comment_event(event) {
                 .append(event.payload.issue.number)
                 .append(' on ')
                 .append(event.repo.name));
+
+    item.append($('<p>').append(event.payload.comment.body));
+
+    $('#events-list ul').append(item);
+}
+
+function commit_comment_event(event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' commented on ')
+                .append(event.repo.name));
+
+    item.append($('<p>')
+                .append('Comment in ')
+                .append(event.payload.comment.commit_id.substring(0, 8)));
 
     item.append($('<p>').append(event.payload.comment.body));
 
