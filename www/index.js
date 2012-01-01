@@ -212,6 +212,8 @@ function issues_event(container, event) {
         open_issues_event(container, event);
     } else if (event.payload.action == 'closed') {
         close_issues_event(container, event);
+    } else if (event.payload.action == 'reopened') {
+        reopen_issues_event(container, event);
     } else {
         console.log(event.payload.action);
         unsupported_event(container, event);
@@ -239,6 +241,21 @@ function open_issues_event(container, event) {
     item.append($('<h3>')
                 .append(event.actor.login)
                 .append(' opened issue ')
+                .append(event.payload.issue.number)
+                .append(' on ')
+                .append(event.repo.name));
+
+    item.append($('<p>').append(event.payload.issue.title));
+
+    container.append(item);
+}
+
+function reopen_issues_event(container, event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' reopened issue ')
                 .append(event.payload.issue.number)
                 .append(' on ')
                 .append(event.repo.name));
