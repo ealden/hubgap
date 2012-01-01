@@ -212,6 +212,9 @@ function issues_event(container, event) {
         open_issues_event(container, event);
     } else if (event.payload.action == 'closed') {
         close_issues_event(container, event);
+    } else {
+        console.log(event.payload.action);
+        unsupported_event(container, event);
     }
 }
 
@@ -298,6 +301,9 @@ function create_event(container, event) {
         create_branch_event(container, event);
     } else if (event.payload.ref_type == 'repository') {
         create_repository_event(container, event);
+    } else {
+        console.log(event.payload.ref_type);
+        unsupported_event(container, event);
     }
 }
 
