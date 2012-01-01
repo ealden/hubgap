@@ -5,7 +5,7 @@ $('#events-refresh').live('click', load_events);
 $('#repos-refresh').live('click', load_repos);
 
 String.prototype.short_sha = function() {
-    return this.substring(0, 8);
+    return this.substring(0, 10);
 }
 
 function load_repos() {
