@@ -34,12 +34,18 @@ function load_events() {
             } else if (event.type == 'CommitCommentEvent') {
                 commit_comment_event(event);
             } else {
-                console.log(event.type);
+                unsupported_event(event);
             }
         });
 
         $('#events-list ul').listview('refresh');
     });
+}
+
+function unsupported_event(event) {
+    $('#events-list ul').append($('<li>')
+                                .append('Unsupported event: ')
+                                .append(event.type));
 }
 
 function push_event(event) {
