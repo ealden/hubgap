@@ -1,11 +1,43 @@
-$('#events-page').live('pageinit', load_events);
-$('#repos-page').live('pageinit', load_repos);
+$('#events-page').live('pageinit', function() {
+    try_exec(events_menu);
 
-$('#events-refresh').live('click', load_events);
-$('#repos-refresh').live('click', load_repos);
+    load_events();
+});
+
+$('#repos-page').live('pageinit', function() {
+    try_exec(repos_menu);
+
+    load_repos();
+});
 
 String.prototype.short_sha = function() {
     return this.substring(0, 10);
+}
+
+function try_exec(f) {
+    try {
+        f()
+    } catch(e) {
+        console.log(f.name + ' execute failed: ' + e);
+    }
+}
+
+function events_menu() {
+    var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_events);
+    var menu_separator_1 = new blackberry.ui.menu.MenuItem(true, 1);
+
+    blackberry.ui.menu.clearMenuItems();
+    blackberry.ui.menu.addMenuItem(menu_refresh);
+    blackberry.ui.menu.addMenuItem(menu_separator_1);
+}
+
+function repos_menu() {
+    var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_repos);
+    var menu_separator_1 = new blackberry.ui.menu.MenuItem(true, 1);
+
+    blackberry.ui.menu.clearMenuItems();
+    blackberry.ui.menu.addMenuItem(menu_refresh);
+    blackberry.ui.menu.addMenuItem(menu_separator_1);
 }
 
 function load_repos() {
