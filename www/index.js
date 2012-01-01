@@ -29,6 +29,8 @@ function load_events() {
                 pull_request_event(event);
             } else if (event.type == 'IssuesEvent') {
                 issues_event(event);
+            } else if (event.type == 'IssueCommentEvent') {
+                issue_comment_event(event);
             } else {
                 console.log(event.type);
             }
@@ -153,6 +155,21 @@ function open_issues_event(event) {
                 .append(event.repo.name));
 
     item.append($('<p>').append(event.payload.issue.title));
+
+    $('#events-list ul').append(item);
+}
+
+function issue_comment_event(event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' commented on issue ')
+                .append(event.payload.issue.number)
+                .append(' on ')
+                .append(event.repo.name));
+
+    item.append($('<p>').append(event.payload.comment.body));
 
     $('#events-list ul').append(item);
 }
