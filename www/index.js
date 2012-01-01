@@ -107,6 +107,8 @@ function update_event_list(container, data) {
             commit_comment_event(container, event);
         } else if (event.type == 'GollumEvent') {
             gollum_event(container, event);
+        } else if (event.type == 'CreateEvent') {
+            create_event(container, event);
         } else {
             unsupported_event(container, event);
         }
@@ -287,6 +289,40 @@ function gollum_event(container, event) {
     item.append($('<p>')
                 .append('Edited ')
                 .append(event.payload.pages[0].title));
+
+    container.append(item);
+}
+
+function create_event(container, event) {
+    if (event.payload.ref_type == 'branch') {
+        create_branch_event(container, event);
+    } else if (event.payload.ref_type == 'repository') {
+        create_repository_event(container, event);
+    }
+}
+
+function create_branch_event(container, event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' created branch ')
+                .append(event.payload.ref)
+                .append(' at ')
+                .append(event.repo.name));
+
+    container.append(item);
+}
+
+function create_repository_event(container, event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' created repository ')
+                .append(event.repo.name));
+
+    item.append($('<p>').append(event.payload.description));
 
     container.append(item);
 }
