@@ -26,17 +26,9 @@ function load_events() {
             if (event.type == 'PushEvent') {
                 push_event(event);
             } else if (event.type == 'PullRequestEvent') {
-                if (event.payload.pull_request.merged) {
-                    merge_pull_request_event(event);
-                } else {
-                    open_pull_request_event(event);
-                }
+                pull_request_event(event);
             } else if (event.type == 'IssuesEvent') {
-                if (event.payload.action == 'opened') {
-                    open_issues_event(event);
-                } else if (event.payload.action == 'closed') {
-                    close_issues_event(event);
-                }
+                issues_event(event);
             } else {
                 console.log(event.type);
             }
@@ -66,6 +58,14 @@ function push_event(event) {
     });
 
     $('#events-list ul').append(item);
+}
+
+function pull_request_event(event) {
+    if (event.payload.pull_request.merged) {
+        merge_pull_request_event(event);
+    } else {
+        open_pull_request_event(event);
+    }
 }
 
 function open_pull_request_event(event) {
@@ -117,6 +117,14 @@ function pull_request_event_summary(event, item) {
                 .append(deletion_count)
                 .append(' ')
                 .append((deletion_count > 1) ? 'deletions' : 'deletion'));
+}
+
+function issues_event(event) {
+    if (event.payload.action == 'opened') {
+        open_issues_event(event);
+    } else if (event.payload.action == 'closed') {
+        close_issues_event(event);
+    }
 }
 
 function close_issues_event(event) {
