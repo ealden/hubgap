@@ -69,6 +69,8 @@ function load_events() {
                 issue_comment_event(event);
             } else if (event.type == 'CommitCommentEvent') {
                 commit_comment_event(event);
+            } else if (event.type == 'GollumEvent') {
+                gollum_event(event);
             } else {
                 unsupported_event(event);
             }
@@ -231,6 +233,22 @@ function commit_comment_event(event) {
                 .append(event.payload.comment.commit_id.short_sha()));
 
     item.append($('<p>').append(event.payload.comment.body));
+
+    $('#events-list ul').append(item);
+}
+
+function gollum_event(event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' edited the ')
+                .append(event.repo.name)
+                .append(' wiki'));
+
+    item.append($('<p>')
+                .append('Edited ')
+                .append(event.payload.pages[0].title));
 
     $('#events-list ul').append(item);
 }
