@@ -43,10 +43,13 @@ function load_events() {
 function push_event(event) {
     var item = $('<li>');
 
+    var ref = event.payload.ref;
+    var branch = ref.substring(ref.lastIndexOf('/') + 1);
+
     item.append($('<h3>')
                 .append(event.actor.login)
                 .append(' pushed to ')
-                .append(event.payload.ref)
+                .append(branch)
                 .append(' on ')
                 .append(event.repo.name));
 
