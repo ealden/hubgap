@@ -25,6 +25,12 @@ function load_events() {
         $.each(data.data, function(index, event) {
             if (event.type == 'PushEvent') {
                 push_event(event);
+            } else if (event.type == 'PullRequestEvent') {
+                if (event.payload.pull_request.merged) {
+                    merge_pull_request_event(event);
+                } else {
+                    open_pull_request_event(event);
+                }
             } else {
                 console.log(event.type);
             }
@@ -49,6 +55,32 @@ function push_event(event) {
 
         item.append($('<p>').append(sha).append(' ').append(commit.message));
     });
+
+    $('#events-list ul').append(item);
+}
+
+function open_pull_request_event(event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' opened pull request ')
+                .append(event.payload.number)
+                .append(' on ')
+                .append(event.repo.name));
+
+    $('#events-list ul').append(item);
+}
+
+function merge_pull_request_event(event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' merged pull request ')
+                .append(event.payload.number)
+                .append(' on ')
+                .append(event.repo.name));
 
     $('#events-list ul').append(item);
 }
