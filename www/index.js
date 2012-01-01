@@ -4,6 +4,10 @@ $('#repos-page').live('pageinit', load_repos);
 $('#events-refresh').live('click', load_events);
 $('#repos-refresh').live('click', load_repos);
 
+String.prototype.short_sha = function() {
+    return this.substring(0, 8);
+}
+
 function load_repos() {
     $.getJSON('https://api.github.com/users/ealden/repos?callback=?', function(data) {
         $('#repo-list ul').empty();
@@ -62,7 +66,7 @@ function push_event(event) {
                 .append(event.repo.name));
 
     $.each(event.payload.commits, function(commit_index, commit) {
-        var sha = $('<code>').append(commit.sha.substring(0, 8));
+        var sha = $('<code>').append(commit.sha.short_sha());
 
         item.append($('<p>').append(sha).append(' ').append(commit.message));
     });
@@ -192,7 +196,7 @@ function commit_comment_event(event) {
 
     item.append($('<p>')
                 .append('Comment in ')
-                .append(event.payload.comment.commit_id.substring(0, 8)));
+                .append(event.payload.comment.commit_id.short_sha()));
 
     item.append($('<p>').append(event.payload.comment.body));
 
