@@ -4,6 +4,12 @@ $('#news-feed-page').live('pageinit', function() {
     load_news_feed();
 });
 
+$('#your-actions-page').live('pageinit', function() {
+    try_exec(your_actions_menu);
+
+    load_your_actions();
+});
+
 $('#repos-page').live('pageinit', function() {
     try_exec(repos_menu);
 
@@ -24,6 +30,15 @@ function try_exec(f) {
 
 function news_feed_menu() {
     var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_news_feed);
+    var menu_separator_1 = new blackberry.ui.menu.MenuItem(true, 1);
+
+    blackberry.ui.menu.clearMenuItems();
+    blackberry.ui.menu.addMenuItem(menu_refresh);
+    blackberry.ui.menu.addMenuItem(menu_separator_1);
+}
+
+function your_actions_menu() {
+    var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_your_actions);
     var menu_separator_1 = new blackberry.ui.menu.MenuItem(true, 1);
 
     blackberry.ui.menu.clearMenuItems();
@@ -57,6 +72,12 @@ function load_repos() {
 function load_news_feed() {
     $.getJSON('https://api.github.com/users/ealden/received_events?callback=?', function(data) {
         update_event_list($('#news-feed-list ul'), data.data);
+    });
+}
+
+function load_your_actions() {
+    $.getJSON('https://api.github.com/users/ealden/events?callback=?', function(data) {
+        update_event_list($('#your-actions-list ul'), data.data);
     });
 }
 
