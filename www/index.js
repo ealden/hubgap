@@ -56,37 +56,41 @@ function load_repos() {
 
 function load_news_feed() {
     $.getJSON('https://api.github.com/users/ealden/received_events?callback=?', function(data) {
-        $('#news-feed-list ul').empty();
-
-        $.each(data.data, function(index, event) {
-            if (event.type == 'PushEvent') {
-                push_event(event);
-            } else if (event.type == 'PullRequestEvent') {
-                pull_request_event(event);
-            } else if (event.type == 'IssuesEvent') {
-                issues_event(event);
-            } else if (event.type == 'IssueCommentEvent') {
-                issue_comment_event(event);
-            } else if (event.type == 'CommitCommentEvent') {
-                commit_comment_event(event);
-            } else if (event.type == 'GollumEvent') {
-                gollum_event(event);
-            } else {
-                unsupported_event(event);
-            }
-        });
-
-        $('#news-feed-list ul').listview('refresh');
+        update_event_list($('#news-feed-list ul'), data.data);
     });
 }
 
-function unsupported_event(event) {
-    $('#news-feed-list ul').append($('<li>')
-                                .append('Unsupported event: ')
-                                .append(event.type));
+function update_event_list(container, data) {
+    container.empty();
+
+    $.each(data, function(index, event) {
+        if (event.type == 'PushEvent') {
+            push_event(container, event);
+        } else if (event.type == 'PullRequestEvent') {
+            pull_request_event(container, event);
+        } else if (event.type == 'IssuesEvent') {
+            issues_event(container, event);
+        } else if (event.type == 'IssueCommentEvent') {
+            issue_comment_event(container, event);
+        } else if (event.type == 'CommitCommentEvent') {
+            commit_comment_event(container, event);
+        } else if (event.type == 'GollumEvent') {
+            gollum_event(container, event);
+        } else {
+            unsupported_event(container, event);
+        }
+    });
+
+    container.listview('refresh');
 }
 
-function push_event(event) {
+function unsupported_event(container, event) {
+    container.append($('<li>')
+                     .append('Unsupported event: ')
+                     .append(event.type));
+}
+
+function push_event(container, event) {
     var item = $('<li>');
 
     var ref = event.payload.ref;
@@ -105,18 +109,18 @@ function push_event(event) {
         item.append($('<p>').append(sha).append(' ').append(commit.message));
     });
 
-    $('#news-feed-list ul').append(item);
+    container.append(item);
 }
 
-function pull_request_event(event) {
+function pull_request_event(container, event) {
     if (event.payload.pull_request.merged) {
-        merge_pull_request_event(event);
+        merge_pull_request_event(container, event);
     } else {
-        open_pull_request_event(event);
+        open_pull_request_event(container, event);
     }
 }
 
-function open_pull_request_event(event) {
+function open_pull_request_event(container, event) {
     var item = $('<li>');
 
     item.append($('<h3>')
@@ -128,10 +132,10 @@ function open_pull_request_event(event) {
 
     pull_request_event_summary(event, item);
 
-    $('#news-feed-list ul').append(item);
+    container.append(item);
 }
 
-function merge_pull_request_event(event) {
+function merge_pull_request_event(container, event) {
     var item = $('<li>');
 
     item.append($('<h3>')
@@ -143,11 +147,11 @@ function merge_pull_request_event(event) {
 
     pull_request_event_summary(event, item);
 
-    $('#news-feed-list ul').append(item);
+    container.append(item);
 }
 
 function pull_request_event_summary(event, item) {
-   item.append($('<p>').append(event.payload.pull_request.title));
+    item.append($('<p>').append(event.payload.pull_request.title));
 
     var commit_count = event.payload.pull_request.commits;
     var addition_count = event.payload.pull_request.additions;
@@ -167,15 +171,15 @@ function pull_request_event_summary(event, item) {
                 .append((deletion_count > 1) ? 'deletions' : 'deletion'));
 }
 
-function issues_event(event) {
+function issues_event(container, event) {
     if (event.payload.action == 'opened') {
-        open_issues_event(event);
+        open_issues_event(container, event);
     } else if (event.payload.action == 'closed') {
-        close_issues_event(event);
+        close_issues_event(container, event);
     }
 }
 
-function close_issues_event(event) {
+function close_issues_event(container, event) {
     var item = $('<li>');
 
     item.append($('<h3>')
@@ -187,10 +191,10 @@ function close_issues_event(event) {
 
     item.append($('<p>').append(event.payload.issue.title));
 
-    $('#news-feed-list ul').append(item);
+    container.append(item);
 }
 
-function open_issues_event(event) {
+function open_issues_event(container, event) {
     var item = $('<li>');
 
     item.append($('<h3>')
@@ -202,10 +206,10 @@ function open_issues_event(event) {
 
     item.append($('<p>').append(event.payload.issue.title));
 
-    $('#news-feed-list ul').append(item);
+    container.append(item);
 }
 
-function issue_comment_event(event) {
+function issue_comment_event(container, event) {
     var item = $('<li>');
 
     item.append($('<h3>')
@@ -217,10 +221,10 @@ function issue_comment_event(event) {
 
     item.append($('<p>').append(event.payload.comment.body));
 
-    $('#news-feed-list ul').append(item);
+    container.append(item);
 }
 
-function commit_comment_event(event) {
+function commit_comment_event(container, event) {
     var item = $('<li>');
 
     item.append($('<h3>')
@@ -234,10 +238,10 @@ function commit_comment_event(event) {
 
     item.append($('<p>').append(event.payload.comment.body));
 
-    $('#news-feed-list ul').append(item);
+    container.append(item);
 }
 
-function gollum_event(event) {
+function gollum_event(container, event) {
     var item = $('<li>');
 
     item.append($('<h3>')
@@ -250,5 +254,5 @@ function gollum_event(event) {
                 .append('Edited ')
                 .append(event.payload.pages[0].title));
 
-    $('#news-feed-list ul').append(item);
+    container.append(item);
 }
