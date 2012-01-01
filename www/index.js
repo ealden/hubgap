@@ -31,6 +31,10 @@ function load_events() {
                 } else {
                     open_pull_request_event(event);
                 }
+            } else if (event.type == 'IssuesEvent') {
+                if (event.payload.action == 'closed') {
+                    close_issues_event(event);
+                }
             } else {
                 console.log(event.type);
             }
@@ -111,4 +115,19 @@ function pull_request_event_summary(event, item) {
                 .append(deletion_count)
                 .append(' ')
                 .append((deletion_count > 1) ? 'deletions' : 'deletion'));
+}
+
+function close_issues_event(event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' closed issue ')
+                .append(event.payload.issue.number)
+                .append(' on ')
+                .append(event.repo.name));
+
+    item.append($('<p>').append(event.payload.issue.title));
+
+    $('#events-list ul').append(item);
 }
