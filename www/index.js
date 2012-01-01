@@ -16,6 +16,16 @@ $('#repos-page').live('pageinit', function() {
     load_repos();
 });
 
+String.prototype.shortlog = function() {
+    var n = this.indexOf('\n');
+
+    if (n != -1) {
+        return this.substring(0, n);
+    } else {
+        return this.substring(0);
+    }
+}
+
 String.prototype.short_sha = function() {
     return this.substring(0, 10);
 }
@@ -127,7 +137,10 @@ function push_event(container, event) {
     $.each(event.payload.commits, function(commit_index, commit) {
         var sha = $('<code>').append(commit.sha.short_sha());
 
-        item.append($('<p>').append(sha).append(' ').append(commit.message));
+        item.append($('<p>')
+                    .append(sha)
+                    .append(' ')
+                    .append(commit.message.shortlog()));
     });
 
     container.append(item);
