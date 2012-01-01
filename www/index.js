@@ -1,7 +1,7 @@
-$('#events-page').live('pageinit', function() {
-    try_exec(events_menu);
+$('#news-feed-page').live('pageinit', function() {
+    try_exec(news_feed_menu);
 
-    load_events();
+    load_news_feed();
 });
 
 $('#repos-page').live('pageinit', function() {
@@ -22,8 +22,8 @@ function try_exec(f) {
     }
 }
 
-function events_menu() {
-    var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_events);
+function news_feed_menu() {
+    var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_news_feed);
     var menu_separator_1 = new blackberry.ui.menu.MenuItem(true, 1);
 
     blackberry.ui.menu.clearMenuItems();
@@ -54,9 +54,9 @@ function load_repos() {
     });
 }
 
-function load_events() {
+function load_news_feed() {
     $.getJSON('https://api.github.com/users/ealden/received_events?callback=?', function(data) {
-        $('#events-list ul').empty();
+        $('#news-feed-list ul').empty();
 
         $.each(data.data, function(index, event) {
             if (event.type == 'PushEvent') {
@@ -76,12 +76,12 @@ function load_events() {
             }
         });
 
-        $('#events-list ul').listview('refresh');
+        $('#news-feed-list ul').listview('refresh');
     });
 }
 
 function unsupported_event(event) {
-    $('#events-list ul').append($('<li>')
+    $('#news-feed-list ul').append($('<li>')
                                 .append('Unsupported event: ')
                                 .append(event.type));
 }
@@ -105,7 +105,7 @@ function push_event(event) {
         item.append($('<p>').append(sha).append(' ').append(commit.message));
     });
 
-    $('#events-list ul').append(item);
+    $('#news-feed-list ul').append(item);
 }
 
 function pull_request_event(event) {
@@ -128,7 +128,7 @@ function open_pull_request_event(event) {
 
     pull_request_event_summary(event, item);
 
-    $('#events-list ul').append(item);
+    $('#news-feed-list ul').append(item);
 }
 
 function merge_pull_request_event(event) {
@@ -143,7 +143,7 @@ function merge_pull_request_event(event) {
 
     pull_request_event_summary(event, item);
 
-    $('#events-list ul').append(item);
+    $('#news-feed-list ul').append(item);
 }
 
 function pull_request_event_summary(event, item) {
@@ -187,7 +187,7 @@ function close_issues_event(event) {
 
     item.append($('<p>').append(event.payload.issue.title));
 
-    $('#events-list ul').append(item);
+    $('#news-feed-list ul').append(item);
 }
 
 function open_issues_event(event) {
@@ -202,7 +202,7 @@ function open_issues_event(event) {
 
     item.append($('<p>').append(event.payload.issue.title));
 
-    $('#events-list ul').append(item);
+    $('#news-feed-list ul').append(item);
 }
 
 function issue_comment_event(event) {
@@ -217,7 +217,7 @@ function issue_comment_event(event) {
 
     item.append($('<p>').append(event.payload.comment.body));
 
-    $('#events-list ul').append(item);
+    $('#news-feed-list ul').append(item);
 }
 
 function commit_comment_event(event) {
@@ -234,7 +234,7 @@ function commit_comment_event(event) {
 
     item.append($('<p>').append(event.payload.comment.body));
 
-    $('#events-list ul').append(item);
+    $('#news-feed-list ul').append(item);
 }
 
 function gollum_event(event) {
@@ -250,5 +250,5 @@ function gollum_event(event) {
                 .append('Edited ')
                 .append(event.payload.pages[0].title));
 
-    $('#events-list ul').append(item);
+    $('#news-feed-list ul').append(item);
 }
