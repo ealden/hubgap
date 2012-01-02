@@ -30,6 +30,28 @@ String.prototype.short_sha = function() {
     return this.substring(0, 10);
 }
 
+String.prototype.short_date = function() {
+    var n = this.indexOf('T');
+
+    if (n != -1) {
+        return this.substring(0, n);
+    } else {
+        return this.substring(0);
+    }
+}
+
+String.prototype.left_pad = function(n) {
+    var padded_string = '';
+
+    for (var x = n; x > this.length; x--) {
+        padded_string += '0';
+    }
+
+    padded_string += this;
+
+    return padded_string;
+}
+
 function try_exec(f) {
     try {
         f()
@@ -94,29 +116,40 @@ function load_your_actions() {
 function update_event_list(container, data) {
     container.empty();
 
+    var current_date = '';
+
     $.each(data, function(index, event) {
-        if (event.type == 'PushEvent') {
-            push_event(container, event);
-        } else if (event.type == 'PullRequestEvent') {
-            pull_request_event(container, event);
-        } else if (event.type == 'IssuesEvent') {
-            issues_event(container, event);
-        } else if (event.type == 'IssueCommentEvent') {
-            issue_comment_event(container, event);
-        } else if (event.type == 'CommitCommentEvent') {
-            commit_comment_event(container, event);
-        } else if (event.type == 'GollumEvent') {
-            gollum_event(container, event);
-        } else if (event.type == 'CreateEvent') {
-            create_event(container, event);
-        } else if (event.type == 'DeleteEvent') {
-            delete_event(container, event);
-        } else {
-            unsupported_event(container, event);
+        if (current_date != event.created_at.short_date()) {
+            current_date = event.created_at.short_date();
+            container.append($('<li>').attr('data-role','list-divider').append(current_date));
         }
+
+        render_event(container, event);
     });
 
     container.listview('refresh');
+}
+
+function render_event(container, event) {
+    if (event.type == 'PushEvent') {
+        push_event(container, event);
+    } else if (event.type == 'PullRequestEvent') {
+        pull_request_event(container, event);
+    } else if (event.type == 'IssuesEvent') {
+        issues_event(container, event);
+    } else if (event.type == 'IssueCommentEvent') {
+        issue_comment_event(container, event);
+    } else if (event.type == 'CommitCommentEvent') {
+        commit_comment_event(container, event);
+    } else if (event.type == 'GollumEvent') {
+        gollum_event(container, event);
+    } else if (event.type == 'CreateEvent') {
+        create_event(container, event);
+    } else if (event.type == 'DeleteEvent') {
+        delete_event(container, event);
+    } else {
+        unsupported_event(container, event);
+    }
 }
 
 function unsupported_event(container, event) {
