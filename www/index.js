@@ -1,17 +1,17 @@
 $('#news-feed-page').live('pageinit', function() {
-    try_exec(news_feed_menu);
+    try_exec(blackberry_news_feed_menu);
 
     load_news_feed();
 });
 
 $('#your-actions-page').live('pageinit', function() {
-    try_exec(your_actions_menu);
+    try_exec(blackberry_your_actions_menu);
 
     load_your_actions();
 });
 
 $('#repos-page').live('pageinit', function() {
-    try_exec(repos_menu);
+    try_exec(blackberry_repos_menu);
 
     load_repos();
 });
@@ -58,33 +58,6 @@ function try_exec(f) {
     } catch(e) {
         console.log(f.name + ' execute failed: ' + e);
     }
-}
-
-function news_feed_menu() {
-    var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_news_feed);
-    var menu_separator_1 = new blackberry.ui.menu.MenuItem(true, 1);
-
-    blackberry.ui.menu.clearMenuItems();
-    blackberry.ui.menu.addMenuItem(menu_refresh);
-    blackberry.ui.menu.addMenuItem(menu_separator_1);
-}
-
-function your_actions_menu() {
-    var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_your_actions);
-    var menu_separator_1 = new blackberry.ui.menu.MenuItem(true, 1);
-
-    blackberry.ui.menu.clearMenuItems();
-    blackberry.ui.menu.addMenuItem(menu_refresh);
-    blackberry.ui.menu.addMenuItem(menu_separator_1);
-}
-
-function repos_menu() {
-    var menu_refresh = new blackberry.ui.menu.MenuItem(false, 0, "Refresh", load_repos);
-    var menu_separator_1 = new blackberry.ui.menu.MenuItem(true, 1);
-
-    blackberry.ui.menu.clearMenuItems();
-    blackberry.ui.menu.addMenuItem(menu_refresh);
-    blackberry.ui.menu.addMenuItem(menu_separator_1);
 }
 
 function load_repos() {
