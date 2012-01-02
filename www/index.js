@@ -109,6 +109,8 @@ function update_event_list(container, data) {
             gollum_event(container, event);
         } else if (event.type == 'CreateEvent') {
             create_event(container, event);
+        } else if (event.type == 'DeleteEvent') {
+            delete_event(container, event);
         } else {
             unsupported_event(container, event);
         }
@@ -346,6 +348,28 @@ function create_repository_event(container, event) {
                 .append(event.repo.name));
 
     item.append($('<p>').append(event.payload.description));
+
+    container.append(item);
+}
+
+function delete_event(container, event) {
+    if (event.payload.ref_type == 'branch') {
+        delete_branch_event(container, event);
+    } else {
+        console.log(event.payload.ref_type);
+        unsupported_event(container, event);
+    }
+}
+
+function delete_branch_event(container, event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' deleted branch ')
+                .append(event.payload.ref)
+                .append(' at ')
+                .append(event.repo.name));
 
     container.append(item);
 }
