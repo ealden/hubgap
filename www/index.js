@@ -10,6 +10,10 @@ $('#your-actions-page').live('pageinit', function() {
     load_your_actions();
 });
 
+$('#pull-requests-page').live('pageinit', function() {
+    load_pull_requests();
+});
+
 $('#repos-page').live('pageinit', function() {
     try_exec(blackberry_repos_menu);
 
@@ -83,6 +87,36 @@ function load_news_feed() {
 function load_your_actions() {
     $.getJSON('https://api.github.com/users/ealden/events?callback=?', function(data) {
         update_event_list($('#your-actions-list ul'), data.data);
+    });
+}
+
+function load_pull_requests() {
+    var container = $('#pull-requests-list ul');
+
+    $.getJSON('https://api.github.com/users/ealden/repos?type=all&callback=?', function(repo_data) {
+        $.each(repo_data.data, function(i, repo) {
+            $.getJSON('https://api.github.com/repos/' + repo.owner.login + '/' + repo.name + '/pulls?state=closed&callback=?', function(pull_request_data) {
+                $.each(pull_request_data.data, function(j, pull_request) {
+                    if (pull_request.user.login == 'ealden') {
+                        var item = $('<li>');
+
+                        item.append($('<h3>').append(pull_request.title));
+                        item.append($('<p>').append(pull_request.body));
+                        item.append($('<p>').append($('<em>')
+                                                    .append(pull_request.user.login)
+                                                    .append(' submitted to ')
+                                                    .append(repo.owner.login)
+                                                    .append('/')
+                                                    .append(repo.name)
+                                                    .append(' ')
+                                                    .append(pull_request.created_at.short_date())));
+
+                        container.append(item);
+                        container.listview('refresh');
+                    }
+                });
+            });
+        });
     });
 }
 
