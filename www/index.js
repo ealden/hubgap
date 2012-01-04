@@ -138,25 +138,35 @@ function update_event_list(container, data) {
 }
 
 function render_event(container, event) {
-    if (event.type == 'PushEvent') {
+    switch (event.type) {
+    case 'PushEvent':
         push_event(container, event);
-    } else if (event.type == 'PullRequestEvent') {
+        break;
+    case 'PullRequestEvent':
         pull_request_event(container, event);
-    } else if (event.type == 'IssuesEvent') {
+        break;
+    case 'IssuesEvent':
         issues_event(container, event);
-    } else if (event.type == 'IssueCommentEvent') {
+        break;
+    case 'IssueCommentEvent':
         issue_comment_event(container, event);
-    } else if (event.type == 'CommitCommentEvent') {
+        break;
+    case 'CommitCommentEvent':
         commit_comment_event(container, event);
-    } else if (event.type == 'GollumEvent') {
+        break;
+    case 'GollumEvent':
         gollum_event(container, event);
-    } else if (event.type == 'CreateEvent') {
+        break;
+    case 'CreateEvent':
         create_event(container, event);
-    } else if (event.type == 'DeleteEvent') {
+        break;
+    case 'DeleteEvent':
         delete_event(container, event);
-    } else if (event.type == 'ForkEvent') {
+        break;
+    case 'ForkEvent':
         fork_event(container, event);
-    } else {
+        break;
+    default:
         unsupported_event(container, event);
     }
 }
