@@ -154,6 +154,8 @@ function render_event(container, event) {
         create_event(container, event);
     } else if (event.type == 'DeleteEvent') {
         delete_event(container, event);
+    } else if (event.type == 'ForkEvent') {
+        fork_event(container, event);
     } else {
         unsupported_event(container, event);
     }
@@ -410,6 +412,21 @@ function delete_branch_event(container, event) {
                 .append(event.payload.ref)
                 .append(' at ')
                 .append(event.repo.name));
+
+    container.append(item);
+}
+
+function fork_event(container, event) {
+    var item = $('<li>');
+
+    item.append($('<h3>')
+                .append(event.actor.login)
+                .append(' forked ')
+                .append(event.repo.name));
+
+    item.append($('<p>')
+                .append('Forked repository is at ')
+                .append(event.payload.forkee.owner.login + '/' + event.payload.forkee.name));
 
     container.append(item);
 }
